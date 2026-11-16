@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tiny-api
+  name: tiny-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tiny-api
+  template:
+    metadata:
+      labels:
+        app: tiny-api
+    spec:
+      containers:
+      - image: us-central1-docker.pkg.dev/tiny-api-lab-jd/tiny-api/tiny-api:86ab4cf939de7e465b4af855abf4ba2b085f3019
+        name: tiny-api
+        ports:
+        - containerPort: 8080
+        env:
+        - name: VERSION
+          value: "86ab4cf939de7e465b4af855abf4ba2b085f3019"
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
